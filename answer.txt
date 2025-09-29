@@ -1,0 +1,1 @@
+The major bottleneck seemed to be the size of the buffer. When using a larger buffer, the file copying seemed to run significantly faster. At first I was using a small buffer of only 30 some bytes. however, when updating to 256, I actually increased my times by a factor of around 10.
