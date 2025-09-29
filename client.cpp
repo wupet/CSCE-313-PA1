@@ -29,7 +29,7 @@ int main (int argc, char *argv[]) {
     vector <FIFORequestChannel*> channels;
 	
 	string filename = "";
-	while ((opt = getopt(argc, argv, "p:t:e:f:m:")) != -1) { //grabs the arguments
+	while ((opt = getopt(argc, argv, "p:t:e:f:m:c")) != -1) { //grabs the arguments
 		switch (opt) {
 			case 'p':
 				p = atoi (optarg);
@@ -68,20 +68,20 @@ int main (int argc, char *argv[]) {
 
     FIFORequestChannel cont_chan("control", FIFORequestChannel::CLIENT_SIDE);
     channels.push_back(&cont_chan);
-
+    char buf[MAX_MESSAGE]; // 256
     if(new_chan)
     {
         MESSAGE_TYPE nc = NEWCHANNEL_MSG;
         cont_chan.cwrite(&nc, sizeof(MESSAGE_TYPE));
-        char* chan_name = NULL;
-        cont_chan.cread(chan_name, MAX_MESSAGE);
+        char chan_name[MAX_MESSAGE];
+        memset(chan_name, 0, MAX_MESSAGE);
+        cont_chan.cread(&chan_name, MAX_MESSAGE);
         FIFORequestChannel* new_chan = new FIFORequestChannel(chan_name, FIFORequestChannel::CLIENT_SIDE);
         channels.push_back(new_chan);
     }
 
     FIFORequestChannel chan = *(channels.back());
 
-	char buf[MAX_MESSAGE]; // 256
     if(p != -1 && t != -1 && e != 0 && filename == "") 
     {
         
